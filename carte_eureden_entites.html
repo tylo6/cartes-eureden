@@ -820,7 +820,7 @@ svg.leaflet-image-layer.leaflet-interactive path {
     </div>
     <button class="btn btn-secondary" onclick="resetFilters()">↺ Réinitialiser</button>
     <button class="btn btn-primary" onclick="centerFrance()">📍 Recentrer</button>
-    <div class="counter">Affichage : <span class="counter-num" id="counterDisplay">—</span> / 14 entités</div>
+    <div class="counter">Affichage : <span class="counter-num" id="counterDisplay">—</span> / <span id="counterTotal">—</span> entités</div>
 </div>
 
 <div id="map"></div>
@@ -1063,12 +1063,12 @@ const ENTITIES = [
     "statut": "participation", "lat": 48.3904, "lng": -4.4861, "verified": true
   },
   {
-    "id": 24, "nom": "Le Récolteur (enseigne circuit court)", "type": "Distribution",
-    "adresse": "3 magasins propres : Plœmeur, Auray, Vannes (Morbihan)",
-    "ville": "Plœmeur / Auray / Vannes", "departement": "Morbihan (56)", "region": "Bretagne",
-    "activite": "Enseigne de distribution en circuit court — 100% alimentaire, produits issus d'exploitations dans un rayon de 50 km. Lancée en oct. 2022 (1er magasin Plœmeur). 3 magasins propres + 11 espaces intégrés dans des Magasin Vert / Point Vert.",
-    "detention": "100% — Enseigne Eureden", "effectif": "NC", "ca": "NC",
-    "statut": "entite", "lat": 47.7353, "lng": -3.4306, "verified": true
+    "id": 24, "nom": "Le Récolteur — Plœmeur (épicerie terroir)", "type": "Distribution",
+    "adresse": "54 Rue du Général de Gaulle, 56270 Plœmeur",
+    "ville": "Plœmeur", "departement": "Morbihan (56)", "region": "Bretagne",
+    "activite": "Enseigne d'épicerie-terroir breton. 1er magasin de l'enseigne, ouvert en oct. 2022. Produits issus d'exploitations dans un rayon de 50 km.",
+    "detention": "100% — Enseigne Distribution Eureden", "effectif": "NC", "ca": "NC",
+    "statut": "entite", "lat": 47.7330, "lng": -3.4330, "verified": false
   },
   {
     "id": 25, "nom": "N.N.A. / Nutréa (Nutrition animale)", "type": "Nutrition Animale",
@@ -1079,6 +1079,54 @@ const ENTITIES = [
     "detention": "100% — Filiale Eureden (depuis jan. 2024, ex-JV 50/50 avec Terrena)",
     "effectif": "~345", "ca": "354,5 M€ (2024)",
     "statut": "entite", "lat": 47.8264, "lng": -3.1528, "verified": true
+  },
+  {
+    "id": 26, "nom": "Nutréa — Plouagat (nutrition animale)", "type": "Nutrition Animale",
+    "adresse": "Zone industrielle, 22170 Plouagat",
+    "ville": "Plouagat", "departement": "Côtes-d'Armor (22)", "region": "Bretagne",
+    "activite": "Fabrication d'aliments pour animaux de ferme. Filiale 100% Eureden depuis jan. 2024 (reprise des parts Terrena). Dessert éleveurs du marché libre.",
+    "detention": "100% — Filiale Eureden (depuis jan. 2024)", "effectif": "NC", "ca": "NC",
+    "statut": "entite", "lat": 48.5310, "lng": -2.9840, "verified": false
+  },
+  {
+    "id": 27, "nom": "Nutréa — Plouisy (nutrition animale)", "type": "Nutrition Animale",
+    "adresse": "Zone industrielle, 22200 Plouisy",
+    "ville": "Plouisy", "departement": "Côtes-d'Armor (22)", "region": "Bretagne",
+    "activite": "Fabrication d'aliments pour animaux de ferme. Filiale 100% Eureden depuis jan. 2024.",
+    "detention": "100% — Filiale Eureden (depuis jan. 2024)", "effectif": "NC", "ca": "NC",
+    "statut": "entite", "lat": 48.5600, "lng": -3.2000, "verified": false
+  },
+  {
+    "id": 28, "nom": "Nutréa — Carhaix-Plouguer (nutrition animale)", "type": "Nutrition Animale",
+    "adresse": "Zone industrielle, 29270 Carhaix-Plouguer",
+    "ville": "Carhaix-Plouguer", "departement": "Finistère (29)", "region": "Bretagne",
+    "activite": "Fabrication d'aliments pour animaux de ferme. Filiale 100% Eureden depuis jan. 2024.",
+    "detention": "100% — Filiale Eureden (depuis jan. 2024)", "effectif": "NC", "ca": "NC",
+    "statut": "entite", "lat": 48.2740, "lng": -3.5690, "verified": false
+  },
+  {
+    "id": 29, "nom": "Nutréa — Cléden-Poher (nutrition animale)", "type": "Nutrition Animale",
+    "adresse": "29270 Cléden-Poher",
+    "ville": "Cléden-Poher", "departement": "Finistère (29)", "region": "Bretagne",
+    "activite": "Fabrication d'aliments pour animaux de ferme. Filiale 100% Eureden depuis jan. 2024. Site distinct de Carhaix.",
+    "detention": "100% — Filiale Eureden (depuis jan. 2024)", "effectif": "NC", "ca": "NC",
+    "statut": "entite", "lat": 48.2500, "lng": -3.5200, "verified": false
+  },
+  {
+    "id": 30, "nom": "Le Récolteur — Auray (épicerie terroir)", "type": "Distribution",
+    "adresse": "Rue du Loc'h, 56400 Auray",
+    "ville": "Auray", "departement": "Morbihan (56)", "region": "Bretagne",
+    "activite": "Enseigne d'épicerie-terroir breton. 2e ouverture de l'enseigne. Adresse approximative.",
+    "detention": "100% — Enseigne Distribution Eureden", "effectif": "NC", "ca": "NC",
+    "statut": "entite", "lat": 47.6660, "lng": -2.9880, "verified": false
+  },
+  {
+    "id": 31, "nom": "E&G Sales Co (JV Eureden Œuf / Griffiths — UK)", "type": "Œuf",
+    "adresse": "Shropshire, Angleterre (Royaume-Uni)",
+    "ville": "Shropshire", "departement": "Shropshire", "region": "Royaume-Uni",
+    "activite": "Co-entreprise commerciale ovoproduits pour le marché britannique. Opérationnelle depuis oct. 2025.",
+    "detention": "50% — JV Eureden Oeuf / Griffiths Family Foods (50/50)", "effectif": "NC", "ca": "NC",
+    "statut": "participation", "lat": 52.6800, "lng": -2.4450, "verified": true
   }
 ];
 
@@ -1241,6 +1289,7 @@ document.getElementById('statutFilter').addEventListener('change', applyFilters)
 document.getElementById('regionFilter').addEventListener('change', applyFilters);
 
 document.getElementById('statTotal').textContent = ENTITIES.length + ' entités';
+document.getElementById('counterTotal').textContent = ENTITIES.length;
 renderMarkers(ENTITIES);
 </script>
 </body>
