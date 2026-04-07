@@ -742,7 +742,9 @@ svg.leaflet-image-layer.leaflet-interactive path {
             box-shadow:0 2px 12px rgba(0,0,0,0.15); min-width:210px;
             border:1px solid #dee2e6;
         }
-        .legend-title { font-weight:700; font-size:12px; color:#00587C; text-transform:uppercase; letter-spacing:.5px; margin-bottom:7px; padding-bottom:5px; border-bottom:2px solid #00587C; }
+        .legend-title { font-weight:700; font-size:12px; color:#00587C; text-transform:uppercase; letter-spacing:.5px; margin-bottom:7px; padding-bottom:5px; border-bottom:2px solid #00587C; display:flex; align-items:center; justify-content:space-between; }
+        .legend-close-btn { display:none; background:none; border:none; color:#00587C; font-size:16px; cursor:pointer; padding:0 2px; line-height:1; }
+        @media (max-width: 768px) { .legend-close-btn { display:block; } }
         .legend-section { margin-top:8px; margin-bottom:3px; font-size:10px; color:#999; text-transform:uppercase; letter-spacing:.5px; }
         .legend-item {
             display:flex; align-items:center; gap:7px; margin-bottom:4px;
@@ -793,7 +795,8 @@ svg.leaflet-image-layer.leaflet-interactive path {
             .controls { flex-direction:column; padding:7px 12px; gap:7px; }
             .controls-top { display:flex; align-items:center; gap:8px; width:100%; }
             .controls-top .control-group { flex:1; }
-            .controls-top input[type="text"] { width:100% !important; }
+            .controls-top input[type="text"] { width:100% !important; font-size:16px !important; }
+            select { font-size:16px !important; }
             #controlsFilters { display:none; flex-wrap:wrap; gap:8px; width:100%; }
             #controlsFilters.open { display:flex; }
             .mobile-only { display:flex; align-items:center; flex-shrink:0; }
@@ -882,7 +885,7 @@ svg.leaflet-image-layer.leaflet-interactive path {
 <button class="legend-toggle-btn" id="legendToggleBtn" onclick="toggleLegend()">🗺 Légende</button>
 
 <div class="legend" id="legend">
-    <div class="legend-title">Légende</div>
+    <div class="legend-title">Légende <button class="legend-close-btn" onclick="toggleLegend()" title="Fermer">✕</button></div>
 
     <div class="legend-section">Filiales 100% Eureden</div>
     <div class="legend-item" onclick="toggleFilter('Siège / Direction')">
