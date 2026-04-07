@@ -753,6 +753,13 @@ svg.leaflet-image-layer.leaflet-interactive path {
         .legend-dot-ring { width:13px; height:13px; border-radius:50%; flex-shrink:0; border:2.5px dashed; background:transparent; }
         .legend-dot-star { width:13px; height:13px; flex-shrink:0; display:flex; align-items:center; justify-content:center; font-size:11px; }
         .data-notice { font-size:10px; color:#aaa; margin-top:7px; padding-top:5px; border-top:1px solid #eee; font-style:italic; }
+        .layer-options { margin-top:4px; }
+        .layer-option { display:flex; align-items:center; gap:7px; font-size:12px; color:#444; cursor:pointer; padding:3px 4px; border-radius:4px; transition:background .15s; margin-bottom:2px; }
+        .layer-option:hover { background:#f0f7fa; }
+        .layer-option.active { color:#00587C; font-weight:700; }
+        .layer-radio { width:11px; height:11px; border-radius:50%; border:2px solid #bbb; flex-shrink:0; background:white; transition:all .15s; }
+        .layer-option.active .layer-radio { border-color:#00587C; background:#00587C; }
+        .layer-disabled { opacity:.4; cursor:not-allowed; pointer-events:none; }
 
         .leaflet-popup-content-wrapper { border-radius:8px!important; box-shadow:0 4px 20px rgba(0,0,0,0.2)!important; padding:0!important; }
         .leaflet-popup-content { margin:14px 20px!important; min-width:270px!important; }
@@ -906,6 +913,19 @@ svg.leaflet-image-layer.leaflet-interactive path {
     </div>
 
     <div class="data-notice">⚠ Données partielles — à vérifier<br>Sources : Eureden.com · INPI · Presse spécialisée</div>
+
+    <div class="legend-section">Fond de carte</div>
+    <div class="layer-options">
+        <div class="layer-option active" id="layer-osm" onclick="switchLayer('osm')">
+            <span class="layer-radio"></span> OSM France
+        </div>
+        <div class="layer-option" id="layer-carto" onclick="switchLayer('carto')">
+            <span class="layer-radio"></span> CartoDB Voyager
+        </div>
+        <div class="layer-option layer-disabled" id="layer-ign" title="Clé API IGN requise — geoservices.ign.fr">
+            <span class="layer-radio"></span> IGN Géoportail <span style="font-size:10px;">(clé manquante)</span>
+        </div>
+    </div>
 </div>
 
 <script>
@@ -1199,10 +1219,32 @@ const TYPE_ICONS = {
 
 // Carte
 const map = L.map('map', { center:[48.0,-2.5], zoom:6, zoomControl:true });
-L.tileLayer('https://{s}.tile.openstreetmap.fr/osmfr/{z}/{x}/{y}.png', {
-    attribution:'© <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors — Tiles: <a href="https://openstreetmap.fr">OSM France</a>',
-    subdomains:'abc', maxZoom:20
-}).addTo(map);
+const TILE_LAYERS = {
+    osm: {
+        url: 'https://{s}.tile.openstreetmap.fr/osmfr/{z}/{x}/{y}.png',
+        opts: { attribution:'© <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors — <a href="https://openstreetmap.fr">OSM France</a>', subdomains:'abc', maxZoom:20 }
+    },
+    carto: {
+        url: 'https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png',
+        opts: { attribution:'© <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors © <a href="https://carto.com/attributions">CARTO</a>', subdomains:'abcd', maxZoom:19 }
+    },
+    ign: {
+        url: 'https://wxs.ign.fr/YOUR_IGN_KEY/geoportail/wmts?REQUEST=GetTile&SERVICE=WMTS&VERSION=1.0.0&STYLE=normal&TILEMATRIXSET=PM&FORMAT=image/png&LAYER=GEOGRAPHICALGRIDSYSTEMS.PLANIGNV2&TILEMATRIX={z}&TILEROW={y}&TILECOL={x}',
+        opts: { attribution:'© <a href="https://www.geoportail.gouv.fr">IGN Géoportail</a>', maxZoom:18 }
+    }
+};
+let currentTileLayer = null;
+
+function switchLayer(key) {
+    if (currentTileLayer) map.removeLayer(currentTileLayer);
+    const l = TILE_LAYERS[key];
+    currentTileLayer = L.tileLayer(l.url, l.opts).addTo(map);
+    document.querySelectorAll('.layer-option').forEach(el => el.classList.remove('active'));
+    const btn = document.getElementById('layer-' + key);
+    if (btn) btn.classList.add('active');
+}
+
+switchLayer('osm');
 
 function createCustomIcon(entity) {
     const color = TYPE_COLORS[entity.type] || "#555";
