@@ -756,6 +756,45 @@ svg.leaflet-image-layer.leaflet-interactive path {
 
         .leaflet-popup-content-wrapper { border-radius:8px!important; box-shadow:0 4px 20px rgba(0,0,0,0.2)!important; padding:0!important; }
         .leaflet-popup-content { margin:14px 20px!important; min-width:270px!important; }
+
+        /* === BOUTON LÉGENDE FLOTTANT (mobile) === */
+        .legend-toggle-btn {
+            display:none; position:absolute; bottom:30px; right:10px; z-index:1001;
+            background:white; border:1.5px solid #00587C; color:#00587C;
+            font-size:12px; font-weight:700; padding:7px 14px; border-radius:20px;
+            cursor:pointer; box-shadow:0 2px 8px rgba(0,0,0,0.18);
+            align-items:center; gap:5px;
+        }
+
+        /* === MOBILE === */
+        .mobile-only { display:none; }
+        .controls-top { display:contents; }
+        #controlsFilters { display:contents; }
+
+        @media (max-width: 768px) {
+            /* Header compact */
+            .header { padding:7px 12px; }
+            .header-left svg { height:28px; }
+            .header-left { gap:10px; }
+            .header-title h1 { font-size:13px; line-height:1.2; }
+            .header-title .subtitle { display:none; }
+            .header-right { display:none; }
+
+            /* Contrôles : colonne, search toujours visible, reste pliable */
+            .controls { flex-direction:column; padding:7px 12px; gap:7px; }
+            .controls-top { display:flex; align-items:center; gap:8px; width:100%; }
+            .controls-top .control-group { flex:1; }
+            .controls-top input[type="text"] { width:100% !important; }
+            #controlsFilters { display:none; flex-wrap:wrap; gap:8px; width:100%; }
+            #controlsFilters.open { display:flex; }
+            .mobile-only { display:flex; align-items:center; flex-shrink:0; }
+            .counter { margin-left:0; font-size:12px; }
+
+            /* Légende : masquée par défaut, toggled */
+            .legend { display:none; bottom:70px; max-height:60vh; overflow-y:auto; }
+            .legend.open { display:block; }
+            .legend-toggle-btn { display:flex; }
+        }
     </style>
 </head>
 <body>
@@ -782,10 +821,14 @@ svg.leaflet-image-layer.leaflet-interactive path {
 </div>
 
 <div class="controls">
+  <div class="controls-top">
     <div class="control-group">
         <label>🔍 Recherche</label>
         <input type="text" id="searchInput" placeholder="Nom, ville, activité..." style="width:210px">
     </div>
+    <button class="btn btn-secondary mobile-only" id="filtresBtn" onclick="toggleControls()">Filtres ▼</button>
+  </div>
+  <div id="controlsFilters">
     <div class="control-group">
         <label>📁 Branche</label>
         <select id="typeFilter">
@@ -821,9 +864,12 @@ svg.leaflet-image-layer.leaflet-interactive path {
     <button class="btn btn-secondary" onclick="resetFilters()">↺ Réinitialiser</button>
     <button class="btn btn-primary" onclick="centerFrance()">📍 Recentrer</button>
     <div class="counter">Affichage : <span class="counter-num" id="counterDisplay">—</span> / <span id="counterTotal">—</span> entités</div>
+  </div>
 </div>
 
 <div id="map"></div>
+
+<button class="legend-toggle-btn" id="legendToggleBtn" onclick="toggleLegend()">🗺 Légende</button>
 
 <div class="legend" id="legend">
     <div class="legend-title">Légende</div>
@@ -1261,6 +1307,20 @@ function getFiltered() {
 }
 
 function applyFilters() { renderMarkers(getFiltered()); }
+
+function toggleControls() {
+    const filters = document.getElementById('controlsFilters');
+    const btn = document.getElementById('filtresBtn');
+    const isOpen = filters.classList.toggle('open');
+    btn.textContent = isOpen ? 'Filtres ▲' : 'Filtres ▼';
+}
+
+function toggleLegend() {
+    const legend = document.getElementById('legend');
+    const btn = document.getElementById('legendToggleBtn');
+    const isOpen = legend.classList.toggle('open');
+    btn.textContent = isOpen ? '✕ Fermer' : '🗺 Légende';
+}
 
 function resetFilters() {
     document.getElementById('searchInput').value = '';
