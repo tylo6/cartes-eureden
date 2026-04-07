@@ -731,6 +731,7 @@ svg.leaflet-image-layer.leaflet-interactive path {
         .detention-100 { background:#e8f5e9; color:#2e7d32; border:1px solid #a5d6a7; }
         .detention-minoritaire { background:#fff3e0; color:#e65100; border:1px solid #ffcc80; }
         .detention-partenaire { background:#f3e5f5; color:#6a1b9a; border:1px solid #ce93d8; }
+        .popup-fermeture { font-size:11px; margin-top:5px; color:#c0392b; font-weight:600; }
         .popup-verified { font-size:10px; margin-top:6px; padding-top:6px; border-top:1px solid #eee; color:#999; font-style:italic; }
 
         /* LEGENDE */
@@ -774,7 +775,7 @@ svg.leaflet-image-layer.leaflet-interactive path {
         <div class="antea-badge">Veille Stratégique</div>
         <div class="stats-header">
             <div class="stat-pill" id="statTotal">— entités</div>
-            <div class="stat-pill">6 branches</div>
+            <div class="stat-pill">7 branches</div>
             <div class="stat-pill">~3 Mds €</div>
         </div>
     </div>
@@ -795,6 +796,7 @@ svg.leaflet-image-layer.leaflet-interactive path {
             <option value="Œuf">Œuf</option>
             <option value="Distribution">Distribution</option>
             <option value="Agriculture & Services">Agriculture &amp; Services</option>
+            <option value="Nutrition Animale">Nutrition Animale</option>
             <option value="Partenaire stratégique">Partenaire stratégique</option>
         </select>
     </div>
@@ -844,6 +846,9 @@ svg.leaflet-image-layer.leaflet-interactive path {
     </div>
     <div class="legend-item" onclick="toggleFilter('Agriculture & Services')">
         <div class="legend-dot" style="background:#2E86AB"></div> Agriculture &amp; Services
+    </div>
+    <div class="legend-item" onclick="toggleFilter('Nutrition Animale')">
+        <div class="legend-dot" style="background:#D4AC0D"></div> Nutrition Animale
     </div>
 
     <div class="legend-section">Participations &amp; Partenariats</div>
@@ -1064,6 +1069,16 @@ const ENTITIES = [
     "activite": "Enseigne de distribution en circuit court — 100% alimentaire, produits issus d'exploitations dans un rayon de 50 km. Lancée en oct. 2022 (1er magasin Plœmeur). 3 magasins propres + 11 espaces intégrés dans des Magasin Vert / Point Vert.",
     "detention": "100% — Enseigne Eureden", "effectif": "NC", "ca": "NC",
     "statut": "entite", "lat": 47.7353, "lng": -3.4306, "verified": true
+  },
+  {
+    "id": 25, "nom": "N.N.A. / Nutréa (Nutrition animale)", "type": "Nutrition Animale",
+    "adresse": "45 Moulin de Baudry, 56440 Languidic",
+    "ville": "Languidic", "departement": "Morbihan (56)", "region": "Bretagne",
+    "activite": "Fabrication d'aliments pour animaux de ferme (ruminants, porcs, volailles). Née de la scission de la JV Nutréa (50/50 Eureden/Terrena) le 1er jan. 2024. 5 sites en Bretagne : Plouagat, Plouisy (22), Languidic (56), Cléden, Carhaix (29).",
+    "fermeture": "Usine de Languidic (siège) annoncée en fermeture début 2025.",
+    "detention": "100% — Filiale Eureden (depuis jan. 2024, ex-JV 50/50 avec Terrena)",
+    "effectif": "~345", "ca": "354,5 M€ (2024)",
+    "statut": "entite", "lat": 47.8264, "lng": -3.1528, "verified": true
   }
 ];
 
@@ -1074,7 +1089,8 @@ const TYPE_COLORS = {
     "Œuf":                    "#E67E22",
     "Distribution":           "#8E44AD",
     "Agriculture & Services": "#2E86AB",
-    "Partenaire stratégique": "#7F8C8D"
+    "Partenaire stratégique": "#7F8C8D",
+    "Nutrition Animale":      "#D4AC0D"
 };
 const TYPE_ICONS = {
     "Siège / Direction":      "🏢",
@@ -1083,7 +1099,8 @@ const TYPE_ICONS = {
     "Œuf":                    "🥚",
     "Distribution":           "🏪",
     "Agriculture & Services": "🌾",
-    "Partenaire stratégique": "🤝"
+    "Partenaire stratégique": "🤝",
+    "Nutrition Animale":      "🌽"
 };
 
 // Carte
@@ -1161,6 +1178,7 @@ function buildPopup(e) {
             <div class="popup-row"><span class="popup-label">⚙ Activité</span><span class="popup-value">${e.activite}</span></div>
             ${e.effectif !== 'NC' ? `<div class="popup-row"><span class="popup-label">👥 Effectif</span><span class="popup-value">${e.effectif}</span></div>` : ''}
             ${e.ca !== 'NC' ? `<div class="popup-row"><span class="popup-label">💶 CA</span><span class="popup-value">${e.ca}</span></div>` : ''}
+            ${e.fermeture ? `<div class="popup-fermeture">⚠ ${e.fermeture}</div>` : ''}
             <div class="popup-verified">${verif}</div>
         </div>
     </div>`;
